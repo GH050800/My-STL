@@ -124,41 +124,53 @@ public:
 		}
 	}
 
+	void reserve(size_t newCap)
+	{
+		if (newCap <= m_cap) return;
+
+		T* newData = new T[newCap];
+		for (size_t i = 0; i < m_size; i++)
+		{
+			newData[i] = std::move(m_data[i]);
+		}
+
+		delete[] m_data;
+		m_data = newData;
+		m_cap = newCap;
+	}
+
+	void resize(size_t newSize)
+	{
+		if (newSize == m_size) return;
+
+		if (newSize < m_size)
+		{
+			m_size = newSize;
+			return;
+		}
+
+		if (newSize > m_cap)
+		{
+			reserve(newSize);
+		}
+
+		m_size = newSize;
+	}
+
 public:
-	T& operator[](size_t index)
-	{
-		return m_data[index];
-	}
+	T& operator[](size_t index) { return m_data[index]; }
 
-	const T& operator[](size_t index) const
-	{
-		return m_data[index];
-	}
+	const T& operator[](size_t index) const { return m_data[index]; }
 
-	size_t size() const
-	{
-		return m_size;
-	}
+	size_t size() const { return m_size; }
 
-	size_t capacity() const
-	{
-		return m_cap;
-	}
+	size_t capacity() const { return m_cap; }
 
-	bool empty() const
-	{
-		return m_size == 0;
-	}
+	bool empty() const { return m_size == 0; }
 
-	const T& front() const
-	{
-		return m_data[0];
-	}
+	const T& front() const { return m_data[0]; }
 
-	const T& back() const
-	{
-		return m_data[m_size - 1];
-	}
+	const T& back() const { return m_data[m_size - 1]; }
 };
 }
 #endif // VECTOR_H
